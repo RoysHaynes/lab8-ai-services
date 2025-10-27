@@ -1,0 +1,134 @@
+/**
+ * ChatController
+ * ---------------
+ * The Controller component of the MVC (Model-View-Controller) architecture.
+ *
+ * Responsible for handling all user interactions and connecting the Model and View.
+ * The Controller listens for UI events (form submissions, button clicks) from the View,
+ * updates the Model accordingly, and lets the View automatically re-render through
+ * the observer pattern.
+ *
+ * The Controller never manipulates the DOM directly or stores data itself.
+ *
+ * @class ChatController
+ */
+import { getBotResponse } from "./eliza.js";
+
+export class ChatController {
+    /**
+     * Creates an instance of ChatController and sets up event listeners.
+     *
+     * @constructor
+     * @param {Object} model - The ChatModel instance that manages chat data.
+     * @param {Object} view - The ChatView instance that handles UI rendering.
+     *
+     * @property {Object} model - Reference to the ChatModel used for CRUD operations.
+     * @property {Object} view - Reference to the ChatView for UI updates and event hooks.
+     */
+    constructor(model, view) {
+        this.model = model;
+        this.view = view;
+
+
+        this.view.init(this.model);
+
+        /**
+         * Handles message sending from the input form.
+         *  - Prevents page reload
+         *  - Adds user message to the model
+         *  - Clears input
+         *  - Generates a bot response using Eliza logic
+         */
+        this.view.form.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const text = this.view.input.value.trim();
+            if (!text) return;
+
+
+            this.model.addMessage(text, true);
+
+
+            this.view.input.value = "";
+
+
+            const reply = getBotResponse(text);
+            this.model.addMessage(reply, false);
+        });
+
+        /**
+         * Handles clearing all chat messages.
+         * Displays a confirmation dialog before calling Model.clearMessages().
+         */
+        this.view.clearBtn.addEventListener("click", () => {
+            if (confirm("Are you sure you want to clear all messages?")) {
+                this.model.clearMessages();
+            }
+        });
+
+        /**
+         * Exports chat history as a JSON file.
+         * Converts model data into a downloadable Blob.
+         */
+        this.view.exportBtn.addEventListener("click", () => {
+            const data = this.model.exportChat();
+            const blob = new Blob([data], { type: "application/json" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "chat_export.json";
+            a.click();
+        });
+
+        /**
+         * Imports chat history from a selected JSON file.
+         * Validates the data format before passing it to the Model.
+         */
+        this.view.importBtn.addEventListener("click", () => {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = ".json";
+
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = () => {
+                    try {
+                        this.model.importChat(reader.result);
+                    } catch {
+                        alert("Invalid file format!");
+                    }
+                };
+                reader.readAsText(file);
+            };
+
+            input.click();
+        });
+
+        /**
+         * Handles edit and delete actions on user messages.
+         * Uses event delegation to detect button clicks in the chat body.
+         */
+        this.view.chatBody.addEventListener("click", (e) => {
+            const id = e.target.dataset.messageId;
+            const action = e.target.dataset.action;
+            if (!id || !action) return;
+
+
+            if (action === "delete") {
+                if (confirm("Delete this message?")) {
+                    this.model.deleteMessage(id);
+                }
+            }
+
+
+            if (action === "edit") {
+                const newText = prompt("Edit your message:");
+                if (newText) {
+                    this.model.updateMessage(id, newText);
+                }
+            }
+        });
+    }
+}

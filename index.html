@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVC/CRUD Chat</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="chat-container">
+    <header class="header">
+        <left-side>
+            <h1>Chat Application</h1>
+            <p class="subtitle">MVC Architecture with CRUD Operations</p>
+        </left-side>
+        <right-side>
+            <span id="msg-count" class="badge">0 messages </span>
+        </right-side>
+    </header>
+    <section class="toolbar" aria-label="Chat actions">
+        <button class="btn" type="button" data-export>
+            <span aria-hidden="true">📤</span>
+            <span>Export Chat</span>
+        </button>
+        <button class="btn" type="button" data-import>
+            <span aria-hidden="true">📥</span>
+            <span>Import Chat</span>
+        </button>
+        <button class="btn clear-btn" type="button" data-clear>
+            <span aria-hidden="true">🗑️</span>
+            <span>Clear All</span>
+        </button>
+    </section>
+
+    <section class="chat-body" role="log" aria-live="polite" aria-relevant="additions">
+        <p class="start-chat">No messages yet. Start a conversation!</p>
+    </section>
+
+    <form class="chat-input" autocomplete="off">
+        <input type="text" placeholder="Type a message...">
+        <button type="submit">Send</button>
+    </form>
+
+</main>
+<script type="module" src="./src/js/app.js"></script>
+</body>
