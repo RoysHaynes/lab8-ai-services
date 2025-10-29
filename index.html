@@ -30,6 +30,15 @@
             <span aria-hidden="true">🗑️</span>
             <span>Clear All</span>
         </button>
+        <label for="provider-select" class="dropdown-label">Select AI Provider:</label>
+        <select id="provider-select" class="btn" aria-label="AI Provider">
+            <option value="eliza">Eliza (Local)</option>
+            <option value="groq">Groq</option>
+        </select>
+        <form class="api-input" autocomplete="off">
+            <input type="text" placeholder="Input API Key">
+            <button type="submit">Send</button>
+        </form>
     </section>
 
     <section class="chat-body" role="log" aria-live="polite" aria-relevant="additions">
