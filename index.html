@@ -32,7 +32,6 @@
                 <span>Clear All</span>
             </button>
         </left-tools>
-        <spacer></spacer>
         <right-tools>
             <label for="provider-select" class="dropdown-label">Select AI Provider:</label>
             <select id="provider-select" class="btn" aria-label="AI Provider">
@@ -40,9 +39,10 @@
                 <option value="groq">Groq</option>
             </select>
 
-            <label for="api-key" class="dropdown-label">API Key:</label>
-            <input id="api-key" type="text" placeholder="Input API Key">
-            <button type="submit">Send</button>
+            <form class="api-input" autocomplete="off">
+                <input id="api-button" type="text" placeholder="Input API Key">
+                <button type="submit" class="btn">Send</button>
+            </form>
         </right-tools>
 
     </section>
@@ -55,8 +55,6 @@
         <input type="text" placeholder="Type a message...">
         <button type="submit">Send</button>
     </form>
-
 </main>
 <script type="module" src="./src/js/app.js"></script>
-
 </body>
