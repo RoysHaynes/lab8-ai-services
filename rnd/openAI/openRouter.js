@@ -1,7 +1,19 @@
 document.getElementById("send").addEventListener("click", function() {
     let msg = document.getElementById("msg").value;
-    let api_key = prompt("Enter key: ");
     let endpoint="https://openrouter.ai/api/v1/chat/completions";
+
+    let api_key = localStorage.getItem("open_Key");
+
+    if(!api_key){
+        api_key = prompt("Enter open key: ");
+        if(api_key){
+            localStorage.setItem("open_Key", api_key);
+        }else{
+            alert("Please enter open key");
+            return;
+        }
+    }
+
 
     fetch(endpoint, {
         method: "POST",

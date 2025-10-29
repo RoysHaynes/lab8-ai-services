@@ -1,7 +1,18 @@
 document.getElementById("send").addEventListener("click", function(){
     let msg = document.getElementById("msg").value;
-    let api_key = prompt("Enter key Groq: ");
     let endpoint="https://api.groq.com/openai/v1/chat/completions";
+
+    let api_key = localStorage.getItem("groq_Key");
+
+    if(!api_key){
+        api_key = prompt("Enter groq key: ");
+        if(api_key){
+            localStorage.setItem("groq_Key", api_key);
+        }else{
+            alert("Please enter groq key");
+            return;
+        }
+    }
 
     fetch(endpoint, {
         method: "POST",
