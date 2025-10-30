@@ -7,7 +7,19 @@ The goal is to create a modular system that can easily integrate or replace AI p
 The project explores real-world engineering practices such as secure API key management, asynchronous programming, and automated E2E testing with Playwright.
 
 **Project Link**: [To be added after publishing]
+## Setup Instructions 
 
+```bash
+# 1. Clone & install
+git clone https://github.com/RoysHaynes/lab8-ai-services.git
+cd lab8-ai-services
+npm install          # installs @playwright/test
+# 4. Run a static server (Playwright uses port 5173)
+npx serve -l 5173 .
+
+# 5. Run the Playwright tests
+npx playwright test
+````
 ---
 
 ### Key Themes
@@ -34,32 +46,30 @@ By the end of this lab, the application will:
 
 ## 📁 Repository Structure
 ```aiignore
+```plaintext
 lab8-ai-services/
 │
-├── rnd/ # R&D demos for API testing
-│ ├── groq/
-│ │ ├── index.html
-│ │ └── groqTest.js
-│ └── openAI/
-│ ├── index.html
-│ └── openRouter.js
+├── rnd/                     # R&D demos for API testing
+│   ├── groq/
+│   │   ├── index.html
+│   │   └── groqTest.js
+│   └── openAI/
+│       ├── index.html
+│       └── openRouter.js
 │
 ├── src/
-│ ├── app.js # App initialization
-│ ├── controller.js # Business logic and event handling
-│ ├── model.js # Data persistence and CRUD
-│ ├── view.js # UI rendering and interactions
-│ └── services/ # Service Layer adapters
-│ ├── AIService.js # Abstract interface class
-│ ├── ServiceFactory.js # Returns service by provider name
-│ ├── OpenRouterService.js # Cloud provider via OpenRouter
-│ ├── GroqService.js # Cloud provider via Groq
-│ ├── MemoryKeyStore.js # Local key storage helper
-│ └── eliza.js # Local AI logic (moved from root)
+│   ├── app.js               # Initializes Model, View, and Controller
+│   ├── controller.js        # Core logic: Eliza + Groq integrated here
+│   ├── model.js             # Handles CRUD and localStorage
+│   └── view.js              # Handles rendering and UI
 │
-├── index.html # Main chat UI with provider selector
-├── styles.css # App styling
-├── LICENSE
+├── tests/
+│   ├── eliza.spec.js        # Local AI test
+│   └── groq-mock.spec.js    # Mocked Groq test for E2E validation
+│
+├── index.html               # Main interface with dropdown + chat input
+├── styles.css               # Responsive styling
+├── playwright.config.js     # Test runner setup
 ├── .gitignore
 └── README.md
 ```
@@ -73,6 +83,13 @@ lab8-ai-services/
 > Both services also expose OpenAI-compatible JSON endpoints, which made integration straightforward and secure.
 
 ---
+## 🤖 AI Service Comparison
+
+| Provider | Endpoint | Model | Free Access | Speed | API Key Required | Notes |
+|-----------|-----------|--------|--------------|--------|------------------|--------|
+| **Eliza (Local)** | Local JavaScript | Pattern-based logic | ✅ Yes | ⚡ Instant | ❌ No | Offline, deterministic chatbot |
+| **Groq Cloud** | `https://api.groq.com/openai/v1/chat/completions` | `llama-3.3-70b-versatile` | ✅ Yes | ⚡⚡ Very fast | ✅ Yes | OpenAI-compatible JSON endpoint |
+| **OpenRouter** | `https://openrouter.ai/api/v1/chat/completions` | `gpt-4o-mini` | ✅ Yes | ⚡ Fast | ✅ Yes | Supports multiple open-source models |
 
 ## Design Decisions
 
@@ -117,7 +134,29 @@ I added a new feature where the edit chat now prompts a new response.
 - **Error Handling:**  
   If the Groq API fails, an `(AI error)` placeholder is displayed in chat.
 
+## 🔐 Privacy and Cost Discussion
 
+This project was intentionally designed to avoid collecting or storing user data, credentials, or API keys on any remote server.
+
+- **Local-Only Storage:**  
+  API keys entered by the user are stored **only in `localStorage`** and never leave their device.  
+  This approach satisfies the lab’s goal of demonstrating safe key management in a browser environment.
+
+- **No Sensitive Commits:**  
+  The repository contains no `.env` files or hardcoded credentials.  
+  `.gitignore` ensures any test configuration files or environment variables are ignored by Git.
+
+- **Zero-Cost Providers:**  
+  Both **Groq** and **OpenRouter** issue free developer API keys and do not require credit cards.  
+  This makes them ideal for student or educational projects where cost and data security are concerns.
+
+- **Security Awareness:**  
+  In a production setting, API calls should be routed through a secure backend (e.g., Node or Flask) that reads keys from environment variables (`process.env`).  
+  However, for this educational project, the browser-based key prompt fulfills all learning and safety requirements.
+
+- **No External Tracking:**  
+  The application sends only minimal request data (user messages) and receives model-generated text.  
+  No personal data, cookies, or analytics are transmitted or stored.
 
 ## License
 This project is licensed under the MIT License.
