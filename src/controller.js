@@ -14,6 +14,9 @@
  */
 import { getBotResponse } from "./eliza.js";
 
+const GROQ_KEY_STORAGE = "groq_Key";
+const PROVIDER_KEY = "chat_provider";
+
 export class ChatController {
     /**
      * Creates an instance of ChatController and sets up event listeners.
@@ -29,8 +32,19 @@ export class ChatController {
         this.model = model;
         this.view = view;
 
+        this.providerSelect = document.getElementById("provider-select");
+
+        this.provider = localStorage.getItem(PROVIDER_KEY) || (this.providerSelect?.value || "eliza");
+        if (this.providerSelect) this.providerSelect.value = this.provider;
 
         this.view.init(this.model);
+
+        if (this.providerSelect) {
+            this.providerSelect.addEventListener("change", () => {
+                this.provider = this.providerSelect.value;
+                localStorage.setItem(PROVIDER_KEY, this.provider);
+            });
+        }
 
         /**
          * Handles message sending from the input form.
@@ -52,8 +66,16 @@ export class ChatController {
             this.view.input.value = "";
 
 
-            const reply = getBotResponse(text);
-            this.model.addMessage(reply, false);
+            if (this.provider === "groq") {
+                this.getGroqReply(text).then((reply) => {
+                    this.model.addMessage(reply, false);
+                }).catch((err) => {
+                    this.model.addMessage("(AI error) " + (err?.message || String(err)), false);
+                });
+            } else {
+                const reply = getBotResponse(text);
+                this.model.addMessage(reply, false);
+            }
         });
 
         /**
@@ -130,5 +152,36 @@ export class ChatController {
                 }
             }
         });
+    }
+    getGroqReply(userText) {
+        const endpoint = "https://api.groq.com/openai/v1/chat/completions";
+
+        let api_key = localStorage.getItem(GROQ_KEY_STORAGE);
+        if (!api_key) {
+            api_key = prompt("Enter Groq key:");
+            if (api_key) {
+                localStorage.setItem(GROQ_KEY_STORAGE, api_key);
+            } else {
+                return Promise.reject(new Error("Please enter Groq key"));
+            }
+        }
+
+        return fetch(endpoint, {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + api_key,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                model: "llama-3.3-70b-versatile",
+                messages: [{ role: "user", content: userText }]
+            })
+        })
+            .then(function (response) { return response.json(); })
+            .then(function (data) {
+                return (data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content)
+                    ? data.choices[0].message.content.trim()
+                    : "(no reply)";
+            });
     }
 }
