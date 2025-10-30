@@ -1,3 +1,19 @@
+/**
+ * @file groqTest.js
+ * @description
+ * A simple Research & Development (R&D) test script demonstrating how to send a message
+ * to the Groq Cloud API and display a real-time AI-generated response.
+ *
+ * This file is intentionally minimal to verify API connectivity and response handling
+ * before integrating the logic into the main MVC application. It uses `fetch()` to call
+ * the Groq endpoint with OpenAI-compatible parameters.
+ *
+ * The script:
+ *  - Prompts the user for an API key once, storing it in `localStorage`.
+ *  - Sends a message input (`msg`) from the browser to Groq’s `llama-3.3-70b-versatile` model.
+ *  - Displays the model’s response directly on the page.
+ */
+
 document.getElementById("send").addEventListener("click", function(){
     let msg = document.getElementById("msg").value;
     let endpoint="https://api.groq.com/openai/v1/chat/completions";

@@ -1,3 +1,19 @@
+/**
+ * @file openRouter.js
+ * @description
+ * A Research & Development (R&D) test script demonstrating how to send messages
+ * to the **OpenRouter API** using the OpenAI-compatible `gpt-4o-mini` model.
+ *
+ * This standalone JavaScript file validates successful communication with OpenRouter’s
+ * cloud endpoint before full MVC integration. It provides a minimal working example
+ * for testing network connectivity, authorization headers, and JSON response handling.
+ *
+ * The script:
+ *  - Prompts the user for their **OpenRouter API key** once and stores it in `localStorage`.
+ *  - Sends the user's text message to the OpenRouter `/chat/completions` endpoint.
+ *  - Parses and displays the model’s response dynamically in the DOM.
+ */
+
 document.getElementById("send").addEventListener("click", function() {
     let msg = document.getElementById("msg").value;
     let endpoint="https://openrouter.ai/api/v1/chat/completions";
