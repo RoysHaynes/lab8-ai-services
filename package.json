@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "This lab builds upon **Lab 7’s MVC Chat Application** by introducing an **AI Service Layer** that allows the chat to switch between different language model (LLM) providers such as OpenRouter and Groq.  \r The goal is to create a modular system that can easily integrate or replace AI providers using abstraction patterns like **Dependency Injection (DI)** and **Ports and Adapters (Hexagonal Architecture)**.",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "npx playwright test",
+    "test:ui": "npx playwright test --ui",
+    "test:debug": "npx playwright test --debug",
+    "report": "npx playwright show-report"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/RoysHaynes/lab8-ai-services.git"
