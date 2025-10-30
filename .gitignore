@@ -148,11 +148,6 @@ vite.config.ts.timestamp-*
 #idea
 .idea/
 
-
-# Test and report outputs
-playwright-report/
-test-results/
-
 # System files
 .DS_Store
 Thumbs.db
