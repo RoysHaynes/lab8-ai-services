@@ -1,3 +1,15 @@
+/**
+ * @file eliza.spec.js
+ * @description
+ * End-to-end (E2E) Playwright test for verifying that the **Eliza (Local)** chatbot
+ * responds correctly within the MVC chat application.
+ *
+ * This test confirms:
+ *  - The Eliza provider can be selected from the dropdown.
+ *  - The chat interface accepts and displays user messages.
+ *  - Eliza produces a non-empty automated response.
+ *  - The total message count updates correctly after sending.
+ */
 import { test, expect } from '@playwright/test';
 
 test('Eliza replies to a user message', async ({ page }) => {
