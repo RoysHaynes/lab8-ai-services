@@ -1,0 +1,22 @@
+{
+  "name": "lab8-ai-services",
+  "version": "1.0.0",
+  "description": "This lab builds upon **Lab 7’s MVC Chat Application** by introducing an **AI Service Layer** that allows the chat to switch between different language model (LLM) providers such as OpenRouter and Groq.  \r The goal is to create a modular system that can easily integrate or replace AI providers using abstraction patterns like **Dependency Injection (DI)** and **Ports and Adapters (Hexagonal Architecture)**.",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RoysHaynes/lab8-ai-services.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RoysHaynes/lab8-ai-services/issues"
+  },
+  "homepage": "https://github.com/RoysHaynes/lab8-ai-services#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.9.2"
+  }
+}
