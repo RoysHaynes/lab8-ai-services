@@ -72,6 +72,53 @@ lab8-ai-services/
 > This project is educational, and I wanted to avoid sharing personal financial information with AI providers.  
 > Both services also expose OpenAI-compatible JSON endpoints, which made integration straightforward and secure.
 
+---
+
+## Design Decisions
+
+### Model (`src/model.js`)
+- Reused from Lab 7 for CRUD operations and `localStorage` persistence.
+- Handles `addMessage`, `updateMessage`, `deleteMessage`, `clearMessages`, and JSON import/export.
+- Used unchanged, since AI Service logic occurs only in `controller.js`.
+
+---
+
+### View (`src/view.js`)
+- Reused from Lab 7 with light extensions:
+    - Added `provider-select` dropdown (`<select id="provider-select">`) for AI mode switching.
+    - Added API key input field and “Send” button for future integrations.
+    - Retained message count badge and scroll-to-bottom behavior.
+- No direct DOM manipulation for AI handled here—View remains display-only.
+
+---
+
+### Controller (`src/controller.js`)
+The Controller was **significantly enhanced** to integrate cloud AI logic while preserving the MVC pattern.
+I added a new feature where the edit chat now prompts a new response.
+
+#### 🔧 Key Additions
+- **Provider Switching:**  
+  Dropdown lets users toggle between `Eliza (Local)` and `Groq`.  
+  The selected provider is saved to `localStorage` under `chat_provider`.
+- **Groq Integration:**  
+  When Groq is active, user messages are sent to  
+  `https://api.groq.com/openai/v1/chat/completions`  
+  with the model `llama-3.3-70b-versatile`.
+- **API Key Management:**  
+  Prompts the user for their Groq key once, then saves it in `localStorage` as `groq_Key`.  
+  No key is ever committed to Git.
+- **Message Editing Re-Prompt:**  
+  When a user edits a message:
+    1. The old bot reply immediately following that message is deleted.
+    2. The edited message triggers a fresh AI response (Groq or Eliza).
+    3. The conversation updates dynamically without a reload.
+- **Async/Await:**  
+  Network calls to Groq’s endpoint use `fetch()` wrapped in async functions for clarity.
+- **Error Handling:**  
+  If the Groq API fails, an `(AI error)` placeholder is displayed in chat.
+
+
+
 ## License
 This project is licensed under the MIT License.
 

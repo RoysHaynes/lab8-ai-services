@@ -132,11 +132,10 @@ export class ChatController {
          * Handles edit and delete actions on user messages.
          * Uses event delegation to detect button clicks in the chat body.
          */
-        this.view.chatBody.addEventListener("click", (e) => {
+        this.view.chatBody.addEventListener("click", async (e) => {
             const id = e.target.dataset.messageId;
             const action = e.target.dataset.action;
             if (!id || !action) return;
-
 
             if (action === "delete") {
                 if (confirm("Delete this message?")) {
@@ -144,11 +143,21 @@ export class ChatController {
                 }
             }
 
-
             if (action === "edit") {
                 const newText = prompt("Edit your message:");
                 if (newText) {
                     this.model.updateMessage(id, newText);
+                    try {
+                        if (this.provider === "groq") {
+                            const reply = await this.getGroqReply(newText);
+                            this.model.addMessage(reply, false);
+                        } else {
+                            const reply = getBotResponse(newText);
+                            this.model.addMessage(reply, false);
+                        }
+                    } catch (err) {
+                        this.model.addMessage("(AI error) " + (err?.message || String(err)), false);
+                    }
                 }
             }
         });
