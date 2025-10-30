@@ -129,8 +129,18 @@ export class ChatController {
         });
 
         /**
-         * Handles edit and delete actions on user messages.
-         * Uses event delegation to detect button clicks in the chat body.
+         * Handles edit and delete actions on user messages within the chat body.
+         * Uses event delegation to handle all dynamically created message buttons.
+         *
+         * Behavior:
+         * - **Delete:** Confirms and removes a selected message.
+         * - **Edit:** Prompts for new text, updates the message, deletes the prior AI reply,
+         *   and triggers a new AI response from the active provider.
+         *
+         * @event click
+         * @listens ChatView.chatBody
+         * @async
+         * @param {MouseEvent} e - The event triggered by clicking an edit or delete button.
          */
         this.view.chatBody.addEventListener("click", async (e) => {
             const id = e.target.dataset.messageId;
@@ -162,6 +172,23 @@ export class ChatController {
             }
         });
     }
+
+    /**
+     * Sends a user message to the Groq Cloud API and retrieves a generated response.
+     *
+     * Prompts the user for their Groq API key if it’s not found in `localStorage`.
+     * Uses OpenAI-compatible JSON schema with the `llama-3.3-70b-versatile` model.
+     *
+     * Security:
+     * - The key is stored locally (`localStorage`) under `"groq_Key"`.
+     * - Never logged, committed, or transmitted beyond the API call.
+     *
+     * @async
+     * @function getGroqReply
+     * @param {string} userText - The user’s message to send to the Groq model.
+     * @returns {Promise<string>} The AI-generated text reply, or "(no reply)" if empty.
+     * @throws {Error} If the user declines to enter a key or the network request fails.
+     */
     getGroqReply(userText) {
         const endpoint = "https://api.groq.com/openai/v1/chat/completions";
 
