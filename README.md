@@ -6,7 +6,7 @@ The goal is to create a modular system that can easily integrate or replace AI p
 
 The project explores real-world engineering practices such as secure API key management, asynchronous programming, and automated E2E testing with Playwright.
 
-**Project Link**: [To be added after publishing]
+**Project Link**: https://royshaynes.github.io/lab8-ai-services/
 ## Setup Instructions 
 
 ```bash
